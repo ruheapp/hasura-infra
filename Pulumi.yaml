@@ -1,0 +1,3 @@
+name: hasura-rds
+runtime: nodejs
+description: Set up Hasura on Fargate and connect it to RDS
