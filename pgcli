@@ -1,0 +1,3 @@
+#!/bin/bash
+
+PGPASSWORD=`pulumi config get pgpass` exec pgcli -u `pulumi config get pguser` -h localhost -w $@
