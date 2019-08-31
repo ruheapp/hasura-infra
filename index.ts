@@ -1,49 +1,53 @@
-import * as pulumi from "@pulumi/pulumi";
-import * as docker from "@pulumi/docker";
+import * as pulumi from '@pulumi/pulumi';
+import * as docker from '@pulumi/docker';
 import * as pg from '@pulumi/postgresql';
 
 const cfg = new pulumi.Config();
-const network = new docker.Network("net");
+const network = new docker.Network('net');
 
-const pgImg = new docker.RemoteImage("postgresql-image", {
-  name: "postgres:11",
+const pgImg = new docker.RemoteImage('postgresql-image', {
+  name: 'postgres:11',
   keepLocally: true
 });
 
 const pgVol = new docker.Volume('pgdata');
 
-const pgContainer = new docker.Container("postgres", {
+export const pgContainer = new docker.Container('postgres', {
   image: pgImg.name,
   networksAdvanced: [{ name: network.name }],
-  restart: "on-failure",
+  restart: 'on-failure',
   volumes: [{ volumeName: pgVol.name, containerPath: '/var/lib/postgresql/data' }],
   envs: [
     `POSTGRES_USER=${cfg.require('pguser')}`,
     cfg.requireSecret('pgpass').apply(p => `POSTGRES_PASSWORD=${p}`),
   ],
-  ports: [{ internal: 5432, external: 5432 }]
+  ports: [{ internal: 5432, external: 5432 }],
 });
 
-/* NB: This doesn't work! 
-pg.config.database = 'localhost';
-pg.config.port = 5432;
-pg.config.sslmode = 'disable';
-pg.config.sslMode = 'disable';
-pg.config.username = cfg.require('pguser');
-cfg.requireSecret('pgpass').apply(p => pg.config.password = p);
+function stallThenReturn<T>(timeout: number, value: T): Promise<T> {
+  return new Promise((res) => {
+    setTimeout(() => res(value), timeout);
+  });
+}
 
-const db = new pg.Database('ruhe');
-*/
+const pgProvider = new pg.Provider('pg', {
+  host: pgContainer.ipAddress,
+  username: cfg.require('pguser'),
+  password: cfg.requireSecret('pgpass'),
+  sslmode: stallThenReturn(5 * 1000, 'disable'),
+});
 
-const hasuraImage = new docker.RemoteImage("hasura-image", {
-  name: "hasura/graphql-engine:v1.0.0-beta.6",
+const db = new pg.Database('ruhe', {}, { provider: pgProvider });
+
+const hasuraImage = new docker.RemoteImage('hasura-image', {
+  name: 'hasura/graphql-engine:v1.0.0-beta.6',
   keepLocally: true
 });
 
-const hasuraContainer = new docker.Container("hasura", {
+export const hasuraContainer = new docker.Container('hasura', {
   image: hasuraImage.name,
   networksAdvanced: [{ name: network.name }],
-  restart: "on-failure",
+  restart: 'on-failure',
   envs: [
     cfg.requireSecret('pgpass').apply(p => {
       const u = cfg.require('pguser');
@@ -53,7 +57,7 @@ const hasuraContainer = new docker.Container("hasura", {
     }),
     cfg.requireSecret('pgpass').apply(p =>
       `HASURA_GRAPHQL_ADMIN_SECRET=${p}`),
-    `HASURA_GRAPHQL_JWT_SECRET={"type":"RS512", "jwk_url": "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com"}`,
+    `HASURA_GRAPHQL_JWT_SECRET={'type':'RS512', 'jwk_url': 'https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com'}`,
     `HASURA_GRAPHQL_UNAUTHORIZED_ROLE=anonymous`
   ],
   ports: [{ internal: 8080, external: 8080 }]
