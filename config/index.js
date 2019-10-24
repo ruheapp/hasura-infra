@@ -1,5 +1,5 @@
 if (!process.env.PGSQL_DATABASE) {
-  throw new Error("Dot-source scripts/env.sh first!");
+  throw new Error("Dot-source script/env.sh first!");
 }
 
 module.exports = {

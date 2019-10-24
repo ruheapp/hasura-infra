@@ -10,10 +10,10 @@ sleep 3
 
 pulumi refresh -y && pulumi up -y
 
-. $ROOT/scripts/env.sh
+. $ROOT/script/env.sh
 
-$ROOT/scripts/update-config
+$ROOT/script/update-config
 npx sequelize db:migrate
 
 ## Make sure we end up updating these variables in the parent shell
-exec $ROOT/scripts/env.sh
+exec $ROOT/script/env.sh
