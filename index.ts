@@ -15,7 +15,7 @@ const pgVol = new docker.Volume('pgdata');
 export const pgContainer = new docker.Container('postgres', {
   image: pgImg.name,
   networksAdvanced: [{ name: network.name }],
-  restart: stallThenReturn(5 * 1000, 'on-failure'),
+  restart: 'on-failure',
   volumes: [{ volumeName: pgVol.name, containerPath: '/var/lib/postgresql/data' }],
   envs: [
     `POSTGRES_USER=${cfg.require('pguser')}`,
@@ -23,12 +23,6 @@ export const pgContainer = new docker.Container('postgres', {
   ],
   ports: [{ internal: 5432, external: 5432 }],
 });
-
-function stallThenReturn<T>(timeout: number, value: T): Promise<T> {
-  return new Promise((res) => {
-    setTimeout(() => res(value), timeout);
-  });
-}
 
 const pgProvider = new pg.Provider('pg', {
   host: pgContainer.ipAddress,
