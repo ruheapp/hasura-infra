@@ -6,7 +6,7 @@ const cfg = new pulumi.Config();
 const network = new docker.Network('net');
 
 const pgImg = new docker.RemoteImage('postgresql-image', {
-  name: 'postgres:11',
+  name: 'postgres:latest',
   keepLocally: true
 });
 
