@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -euo pipefail
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+ROOT="$DIR/.."
+
+pulumi up -y || true
+sleep 3
+
+pulumi refresh -y && pulumi up -y
+
+. $ROOT/scripts/env.sh
+
+$ROOT/scripts/update-config
+npx sequelize db:migrate

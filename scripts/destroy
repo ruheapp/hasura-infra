@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -euo pipefail
+
+## NB: The PostgreSQL provider for Pulumi / Terraform really sucks, and is not
+## smart enough to tear down Hasura before we tear down the database, so we
+## need to kill off Hasura behind its back first
+
+docker kill `pulumi stack output -j | jq -r '.hasuraContainer.name'`
+pulumi destroy -y
