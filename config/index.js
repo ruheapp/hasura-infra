@@ -6,7 +6,7 @@ module.exports = {
   "development": {
     "username": process.env['PGSQL_USER'],
     "password": process.env['PGSQL_PASS'],
-    "database": process.env['PGSQL_DATABASE'].replace(/^./, '').replace(/.$/, ''),
+    "database": process.env['PGSQL_DATABASE'],
     "host": "127.0.0.1",
     "dialect": "postgresql",
     "operatorsAliases": false
