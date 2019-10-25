@@ -17,7 +17,7 @@ script/bootstrap
 
 ### Using Hasura
 
-To open Hasura, first go to http://localhost:8081/console/data/schema/public and hit "Track" on all of the tables except the `SequelizeMeta` table. Now, you've got a GraphQL server of your schema, try making queries at http://localhost:8081/console/api-explorer
+Check out the console first at http://localhost:8081. Try making queries at http://localhost:8081/console/api-explorer
 
 ### What Else Can I Do
 
