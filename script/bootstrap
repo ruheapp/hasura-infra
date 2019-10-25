@@ -5,6 +5,10 @@ set -euo pipefail
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 ROOT="$DIR/.."
 
+## NB: We do this because of a bug in Terraform's PostgreSQL provider - it doesn't give enough
+## time for our newly created PostgreSQL instance to boot up before trying to connect to it and
+## create the database and doesn't have any kind of retry logic. So, it'll barf out here with
+## a connection error. We'll wait a hot second, then run `pulumi up` again.
 pulumi up -y || true
 sleep 3
 
