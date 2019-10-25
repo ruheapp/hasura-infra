@@ -50,7 +50,7 @@ export const hasuraContainer = new docker.Container('hasura', {
         `HASURA_GRAPHQL_DATABASE_URL=postgres://${u}:${p}@${hn}:5432/${name}`));
     }),
     cfg.requireSecret('pgpass').apply(p => `HASURA_GRAPHQL_ADMIN_SECRET=${p}`),
-    //`HASURA_GRAPHQL_JWT_SECRET="{'type':'RS512', 'jwk_url': 'https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com'}"`,
+    `HASURA_GRAPHQL_JWT_SECRET={"type":"RS512", "jwk_url": "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com"}`,
     `HASURA_GRAPHQL_ENABLE_CONSOLE=true`,
     `HASURA_GRAPHQL_UNAUTHORIZED_ROLE=anonymous`
   ],
