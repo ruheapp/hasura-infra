@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -euo pipefail
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+ROOT="$DIR/.."
+
+curl -H "X-Hasura-Admin-Secret: $PGSQL_PASS" \
+  -d'{"type": "export_metadata", "args": {}}' \
+  "$HASURA_URL/v1/query" 2>/dev/null \
+  | jq . \
+  > $ROOT/metadata/metadata.json
