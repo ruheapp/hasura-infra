@@ -87,3 +87,52 @@ export const appService = new azure.appservice.AppService("hasura", {
   resourceGroupName: rg.name,
   location: rg.location
 });
+
+const vnet = new azure.network.VirtualNetwork("vnet", {
+  resourceGroupName: rg.name,
+  addressSpaces: ["10.0.0.0/16"],
+  subnets: [{ name: "default", addressPrefix: "10.0.1.0/24" }]
+});
+
+export const jumpboxIp = new azure.network.PublicIp("jumpbox-ip", {
+  resourceGroupName: rg.name,
+  allocationMethod: "Dynamic"
+});
+
+const jumpboxNic = new azure.network.NetworkInterface("jumpboxNic", {
+  resourceGroupName: rg.name,
+  ipConfigurations: [
+    {
+      name: "jumpbox-ipcfg",
+      subnetId: vnet.subnets[0].id,
+      privateIpAddressAllocation: "Dynamic",
+      publicIpAddressId: jumpboxIp.id
+    }
+  ]
+});
+
+export const jumpbox = new azure.compute.VirtualMachine("jumpbox", {
+  resourceGroupName: rg.name,
+  networkInterfaceIds: [jumpboxNic.id],
+  vmSize: "Standard_A0",
+  osProfile: {
+    computerName: "jumpbox",
+    adminUsername: cfg.get("pguser"),
+    adminPassword: cfg.getSecret("pgpass")
+  },
+  osProfileLinuxConfig: {
+    disablePasswordAuthentication: false
+  },
+  storageOsDisk: {
+    createOption: "FromImage",
+    managedDiskType: "Standard_LRS",
+    name: "myosdisk1",
+    diskSizeGb: 30
+  },
+  storageImageReference: {
+    publisher: "canonical",
+    offer: "UbuntuServer",
+    sku: "18.04-LTS",
+    version: "latest"
+  }
+});
