@@ -1,4 +1,4 @@
 /bin/
 node_modules
-Pulumi.dev.yaml
+Pulumi.*.yaml
 config/config.json
