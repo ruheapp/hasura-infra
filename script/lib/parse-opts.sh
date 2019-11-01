@@ -1,11 +1,20 @@
 #!/bin/bash
 
-set -euo pipefail
-
 PARAMS=""
 
-export HASURA_PRODUCTION=''
-export HASURA_SCRIPT_PREFIX='infra-dev/lib'
+## NB: Even if people forget --prod, if we've got a resource group we definitely 
+## are prod
+resourceGroup=$(pulumi config get hasura-infra:resourceGroup 2>&1 > /dev/null || true)
+
+if [[ -n $resourceGroup ]]; then
+  echo "Running in Development mode"
+  export HASURA_PRODUCTION=''
+  export HASURA_SCRIPT_PREFIX='infra-dev/lib'
+else
+  echo "Running in Production mode because 'resourceGroup' is set"
+  export HASURA_PRODUCTION='true'
+  export HASURA_SCRIPT_PREFIX='infra-prod/lib'
+fi
 
 while (( "$#" )); do
   case "$1" in
