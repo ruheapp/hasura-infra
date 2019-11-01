@@ -1,3 +1,0 @@
-name: hasura-docker
-runtime: nodejs
-description: Set up Hasura and PostgreSQL on Docker and populate it with a schema

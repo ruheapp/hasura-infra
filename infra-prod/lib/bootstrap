@@ -1,10 +1,6 @@
 #!/bin/bash
 
 set -euo pipefail
-
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-ROOT="$DIR/.."
 
-. $ROOT/script/lib/parse-opts.sh
-
-$ROOT/$HASURA_SCRIPT_PREFIX/destroy
+pulumi up -y 

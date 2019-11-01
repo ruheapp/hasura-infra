@@ -1,0 +1,3 @@
+name: hasura-infra
+runtime: nodejs
+description: Set up Hasura and PostgreSQL and populate it with a schema

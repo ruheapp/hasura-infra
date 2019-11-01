@@ -61,7 +61,7 @@ const appPlan = new azure.appservice.Plan("hasura", {
 const databaseUrl = pulumi
   .all([
     cfg.require("pguser"),
-    cfg.getSecret("pgpass"),
+    cfg.requireSecret("pgpass"),
     dbServer.name,
     dbServer.fqdn,
     db.name
@@ -75,7 +75,7 @@ export const appService = new azure.appservice.AppService("hasura", {
   appSettings: {
     HASURA_GRAPHQL_DATABASE_URL: databaseUrl,
     HASURA_GRAPHQL_JWT_SECRET: `{"type":"RS512", "jwk_url": "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com"}`,
-    HASURA_GRAPHQL_ADMIN_SECRET: cfg.getSecret("pgpass"),
+    HASURA_GRAPHQL_ADMIN_SECRET: cfg.requireSecret("pgpass"),
     HASURA_GRAPHQL_ENABLE_CONSOLE: `true`,
     HASURA_GRAPHQL_UNAUTHORIZED_ROLE: `anonymous`,
     WEBSITES_PORT: "8080"
@@ -117,8 +117,8 @@ export const jumpbox = new azure.compute.VirtualMachine("jumpbox", {
   vmSize: "Standard_A0",
   osProfile: {
     computerName: "jumpbox",
-    adminUsername: cfg.get("pguser"),
-    adminPassword: cfg.getSecret("pgpass")
+    adminUsername: cfg.require("pguser"),
+    adminPassword: cfg.requireSecret("pgpass")
   },
   osProfileLinuxConfig: {
     disablePasswordAuthentication: false
