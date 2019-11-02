@@ -96,7 +96,8 @@ const vnet = new azure.network.VirtualNetwork("vnet", {
 
 export const jumpboxIp = new azure.network.PublicIp("jumpbox-ip", {
   resourceGroupName: rg.name,
-  allocationMethod: "Dynamic"
+  domainNameLabel: appService.name.apply(n => `jump-${n}`),
+  allocationMethod: "Dynamic",
 });
 
 const jumpboxNic = new azure.network.NetworkInterface("jumpboxNic", {
@@ -111,6 +112,11 @@ const jumpboxNic = new azure.network.NetworkInterface("jumpboxNic", {
   ]
 });
 
+const sshKey = process.env['HASURA_JUMPBOX_SSH_KEY'] || '';
+if (sshKey.length < 2) {
+  throw new Error("Jumpbox SSH key not set!");
+}
+
 export const jumpbox = new azure.compute.VirtualMachine("jumpbox", {
   resourceGroupName: rg.name,
   networkInterfaceIds: [jumpboxNic.id],
@@ -118,10 +124,15 @@ export const jumpbox = new azure.compute.VirtualMachine("jumpbox", {
   osProfile: {
     computerName: "jumpbox",
     adminUsername: cfg.require("pguser"),
-    adminPassword: cfg.requireSecret("pgpass")
   },
   osProfileLinuxConfig: {
-    disablePasswordAuthentication: false
+    disablePasswordAuthentication: true,
+    sshKeys: [
+      {
+        keyData: sshKey,
+        path: `/home/${cfg.require('pguser')}/.ssh/authorized_keys`,
+      }
+    ]
   },
   storageOsDisk: {
     createOption: "FromImage",

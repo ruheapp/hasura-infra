@@ -7,11 +7,9 @@ PARAMS=""
 resourceGroup=$(pulumi config get hasura-infra:resourceGroup 2>&1 > /dev/null || true)
 
 if [[ -n $resourceGroup ]]; then
-  echo "Running in Development mode"
   export HASURA_PRODUCTION=''
   export HASURA_SCRIPT_PREFIX='infra-dev/lib'
 else
-  echo "Running in Production mode because 'resourceGroup' is set"
   export HASURA_PRODUCTION='true'
   export HASURA_SCRIPT_PREFIX='infra-prod/lib'
 fi

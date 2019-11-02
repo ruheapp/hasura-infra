@@ -2,9 +2,13 @@ if (!process.env.PGSQL_DATABASE) {
   throw new Error("Dot-source script/env.sh first!");
 }
 
+const user = process.env['PGSQL_USER_HN'] ?
+  `${process.env['PGSQL_USER']}@${process.env['PGSQL_USER_HN']}` :
+  process.env['PGSQL_USER'];
+
 module.exports = {
   "development": {
-    "username": process.env['PGSQL_USER'],
+    "username": user,
     "password": process.env['PGSQL_PASS'],
     "database": process.env['PGSQL_DATABASE'],
     "host": "127.0.0.1",

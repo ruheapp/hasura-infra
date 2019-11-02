@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -euo pipefail
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+ROOT="$DIR/../.."
+
+. $ROOT/script/lib/parse-opts.sh
+
+if [[ -z $HASURA_PRODUCTION ]]; then
+  exit 0
+fi
+
+KEYPATH="$ROOT/config/keys/$HASURA_STACK_NAME"
+LOCKPATH="$KEYPATH.lock"
+
+if [[ ! -f $LOCKPATH ]]; then
+  exit 0
+fi
+
+PID=`cat $LOCKPATH`
+rm -f $LOCKPATH
+kill $PID

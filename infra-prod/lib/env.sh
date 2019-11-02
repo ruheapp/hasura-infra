@@ -1,19 +1,16 @@
 #!/bin/bash
 
-set -euo pipefail
+STACK=`pulumi stack output -j`
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+echo export PGSQL_DATABASE=`echo $STACK | jq -r '.db.name'`;
 
-echo "This is where we SSH into the jumpbox!"
-exit 1
+echo export PGSQL_USER=`pulumi config get pguser`
+echo export PGSQL_USER_HN=`echo $STACK | jq -r .dbServer.name`
+echo export PGSQL_PASS=`pulumi config get pgpass`;
 
-pushd $DIR
+echo export PGSQL_HOST=`echo $STACK | jq -r .dbServer.fqdn`;
 
-export PGSQL_DATABASE=`pulumi stack output -j | jq -r '.db.name'`
-export PGSQL_USER=`pulumi config get pguser`
-export PGSQL_PASS=`pulumi config get pgpass`
+SITE=`echo $STACK | jq .appService.defaultSiteHostname`
+echo export HASURA_URL="http://$SITE"
 
-PORT=`pulumi stack output -j | jq -r '.hasuraContainer.ports[0].external'`
-export HASURA_URL="http://localhost:$PORT"
-
-popd
+echo export HASURA_JUMPBOX_HOSTNAME=`echo $STACK | jq -r '.jumpboxIp.fqdn'`;

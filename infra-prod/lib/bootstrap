@@ -1,6 +1,18 @@
 #!/bin/bash
 
 set -euo pipefail
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+ROOT="$DIR/../.."
+
+export HASURA_STACK_NAME=`pulumi stack | head -n 1 | sed -e 's/.*is //' -e 's/.$//g'`
+
+mkdir -p "$ROOT/config/keys"
+KEYPATH="$ROOT/config/keys/$HASURA_STACK_NAME"
+
+if [[ ! -f $KEYPATH ]]; then
+  ssh-keygen -t rsa -b 2048 -f "$KEYPATH" -N ""
+fi
+
+export HASURA_JUMPBOX_SSH_KEY=`ssh-keygen -e -f $KEYPATH.pub | grep -v 'Comment'`
 pulumi up -y 

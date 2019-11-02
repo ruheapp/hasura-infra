@@ -2,3 +2,4 @@
 node_modules
 Pulumi.*.yaml
 config/config.json
+config/keys
