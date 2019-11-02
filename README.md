@@ -9,8 +9,8 @@ First Create a Pulumi account and install the CLI - then:
 ```sh
 pulumi stack   ## Create a new stack that we'll install against
 
-pulumi config set hasura-docker:pguser MyCoolUserName
-pulumi config set hasura-docker:pgpass OmgASekritPassword!
+pulumi config set hasura-infra:pguser MyCoolUserName
+pulumi config set --secret hasura-infra:pgpass OmgASekritPassword!
 
 script/bootstrap
 ```
@@ -62,3 +62,23 @@ node
 db = require('./models')
 db.User.create({name: "Sally", email: "sally@iscool.com"})
 ```
+
+## Production Mode
+
+This repo also contains a production-quality build of this setup, using Microsoft Azure. To run it:
+
+```sh
+pulumi stack init  ## Create a non-dev stack
+
+pulumi config set hasura-infra:pguser MyCoolUserName
+pulumi config set --secret hasura-infra:pgpass OmgASekritPassword!
+pulumi config set hasura-infra:pgpass OmgASekritPassword!
+
+script/bootstrap --prod
+```
+
+To find where your Hasura server ended up, run:
+
+```sh
+eval `script/env.sh`
+echo "Your Hasura installation is at $HASURA_URL"
