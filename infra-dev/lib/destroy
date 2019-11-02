@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -euo pipefail
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+## NB: The PostgreSQL provider for Pulumi / Terraform really sucks, and is not
+## smart enough to tear down Hasura before we tear down the database, so we
+## need to kill off Hasura behind its back first
+
+docker kill `pulumi stack output -j | jq -r '.hasuraContainer.name'` || true
+pulumi destroy -y

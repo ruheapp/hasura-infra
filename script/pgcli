@@ -1,3 +1,19 @@
 #!/bin/bash
 
-PGPASSWORD=`pulumi config get pgpass` exec pgcli -u `pulumi config get pguser` -h localhost -w $@
+set -euo pipefail
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+ROOT="$DIR/.."
+
+. $ROOT/script/lib/parse-opts.sh
+
+$ROOT/script/lib/start-db-tunnel
+sleep 2
+
+if [[ -z $HASURA_PRODUCTION ]]; then
+  PGPASSWORD="$PGSQL_PASS" pgcli -u "$PGSQL_USER" -h localhost -w $PGSQL_DATABASE $@
+else
+  PGPASSWORD="$PGSQL_PASS" pgcli -u "$PGSQL_USER@$PGSQL_USER_HN" -h localhost -w $PGSQL_DATABASE $@ 
+fi
+
+$ROOT/script/lib/stop-db-tunnel

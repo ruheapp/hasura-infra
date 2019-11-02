@@ -5,21 +5,22 @@ set -euo pipefail
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 ROOT="$DIR/.."
 
-## NB: We do this because of a bug in Terraform's PostgreSQL provider - it doesn't give enough
-## time for our newly created PostgreSQL instance to boot up before trying to connect to it and
-## create the database and doesn't have any kind of retry logic. So, it'll barf out here with
-## a connection error. We'll wait a hot second, then run `pulumi up` again.
-pulumi up -y || true
-sleep 3
+pushd $ROOT
+npm i
+popd
 
-pulumi refresh -y && pulumi up -y
+. $ROOT/script/lib/parse-opts.sh
 
-. $ROOT/script/env.sh
+$ROOT/$HASURA_SCRIPT_PREFIX/bootstrap
+
+eval `$ROOT/script/env.sh`
+
+$ROOT/script/lib/start-db-tunnel
+sleep 5
 
 $ROOT/script/update-config
 npx sequelize db:migrate
 
 $ROOT/script/import-metadata
 
-## Make sure we end up updating these variables in the parent shell
-exec $ROOT/script/env.sh
+$ROOT/script/lib/stop-db-tunnel
