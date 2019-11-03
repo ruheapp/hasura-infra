@@ -6,7 +6,7 @@ const cfg = new pulumi.Config();
 const network = new docker.Network('net');
 
 const pgImg = new docker.RemoteImage('postgresql-image', {
-  name: 'postgres:11',
+  name: 'postgres:12',
   keepLocally: true
 });
 
@@ -34,7 +34,7 @@ const pgProvider = new pg.Provider('pg', {
 export const db = new pg.Database('ruhe', {}, { provider: pgProvider });
 
 const hasuraImage = new docker.RemoteImage('hasura-image', {
-  name: 'hasura/graphql-engine:v1.0.0-beta.8',
+  name: 'hasura/graphql-engine:v1.0.0-beta.9',
   keepLocally: true
 });
 
