@@ -88,6 +88,21 @@ export const appService = new azure.appservice.AppService("hasura", {
   location: rg.location
 });
 
+export const helloWorld = new azure.appservice.HttpFunction("helloWorld", {
+  callback: async (context, req) => {
+    return {
+      status: 200,
+      body: appService.urn.apply(u => `Hasura is ${u} and the request body is\n${req.body}`),
+    };
+  }
+});
+
+export const helloWorldApp = new azure.appservice.MultiCallbackFunctionApp('helloWorldApp', {
+  resourceGroupName: rg.name,
+  location: rg.location,
+  functions: [helloWorld],
+})
+
 const vnet = new azure.network.VirtualNetwork("vnet", {
   resourceGroupName: rg.name,
   addressSpaces: ["10.0.0.0/16"],
