@@ -7,6 +7,7 @@ ROOT="$DIR/.."
 
 pushd $ROOT
 npm i
+pipenv install
 popd
 
 . $ROOT/script/lib/parse-opts.sh

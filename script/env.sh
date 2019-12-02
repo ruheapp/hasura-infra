@@ -9,6 +9,6 @@ if [[ -z "${HASURA_SCRIPT_PREFIX+SET}" ]]; then
   . $ROOT/script/lib/parse-opts.sh
 fi
 
-echo export HASURA_STACK_NAME=`pulumi stack | head -n 1 | sed -e 's/.*is //' -e 's/.$//g'`;
+echo export HASURA_STACK_NAME=`pulumi stack 2>/dev/null | head -n 1 | sed -e 's/.*is //' -e 's/.$//g'`;
 
 $ROOT/$HASURA_SCRIPT_PREFIX/env.sh

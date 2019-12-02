@@ -33,8 +33,8 @@ export const dbServer = new azure.postgresql.Server("pg", {
 export const db = new azure.postgresql.Database("pg-db", {
   resourceGroupName: rg.name,
   serverName: dbServer.name,
-  charset: "utf8",
-  collation: "en_US",
+  charset: "UTF8",
+  collation: "en-US",
   name: cfg.get("dbname") || "ruhe"
 });
 
@@ -82,26 +82,25 @@ export const appService = new azure.appservice.AppService("hasura", {
   },
   siteConfig: {
     alwaysOn: true,
-    linuxFxVersion: "DOCKER|hasura/graphql-engine:1.0.0-beta.9"
+    linuxFxVersion: "DOCKER|hasura/graphql-engine:1.0.0-rc.1"
   },
   resourceGroupName: rg.name,
   location: rg.location
 });
 
-export const helloWorld = new azure.appservice.HttpFunction("helloWorld", {
-  callback: async (context, req) => {
+/*
+export const helloWorld = new azure.appservice.HttpEventSubscription("helloWorld", {
+  resourceGroup: rg,
+  callback: async (_context, req) => {
     return {
       status: 200,
+      headers: { "content/type": "text/plain" },
       body: appService.urn.apply(u => `Hasura is ${u} and the request body is\n${req.body}`),
     };
-  }
+  },
+  hostSettings: { }
 });
-
-export const helloWorldApp = new azure.appservice.MultiCallbackFunctionApp('helloWorldApp', {
-  resourceGroupName: rg.name,
-  location: rg.location,
-  functions: [helloWorld],
-})
+*/
 
 const vnet = new azure.network.VirtualNetwork("vnet", {
   resourceGroupName: rg.name,
