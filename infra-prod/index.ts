@@ -82,7 +82,7 @@ export const appService = new azure.appservice.AppService("hasura", {
   },
   siteConfig: {
     alwaysOn: true,
-    linuxFxVersion: "DOCKER|hasura/graphql-engine:1.0.0-rc.1"
+    linuxFxVersion: "DOCKER|hasura/graphql-engine:latest"
   },
   resourceGroupName: rg.name,
   location: rg.location
