@@ -1,3 +1,0 @@
-name: hasura-azure
-runtime: nodejs
-description: Set up Hasura and PostgreSQL on Azure in Production and populate it with a schema
