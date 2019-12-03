@@ -1,5 +1,5 @@
 /bin/
 node_modules
 Pulumi.*.yaml
-config/config.json
 config/keys
+db/config.yaml
