@@ -147,3 +147,23 @@ export const jumpbox = new azure.compute.VirtualMachine("jumpbox", {
     version: "latest"
   }
 });
+
+/*
+export const helloWorld = new azure.appservice.HttpEventSubscription("helloWorld", {
+  resourceGroup: new azure.core.ResourceGroup("ruhe-fn", { name: cfg.require("resourceGroup") + "-fn", location }),
+  callback: async (_context, req) => {
+    console.log("WE HAVE STARTED");
+    const theUri = `https://${appService.defaultSiteHostname.get()}`;
+
+    const ret = {
+      status: 200,
+      headers: { "content-type": "text/plain" },
+      body: `Hasura is ${theUri} and the request body is\n${req.body}`,
+    };
+
+    console.log(`ABOUT TO RETURN - THE URI IS ${theUri}`);
+    return ret;
+  },
+  hostSettings: { }
+});
+*/
