@@ -16,12 +16,4 @@ $ROOT/$HASURA_SCRIPT_PREFIX/bootstrap
 
 eval `$ROOT/script/env.sh`
 
-$ROOT/script/lib/start-db-tunnel
-sleep 5
-
-$ROOT/script/update-config
-npx sequelize db:migrate
-
-$ROOT/script/import-metadata
-
-$ROOT/script/lib/stop-db-tunnel
+## TODO: Hasura Migration
