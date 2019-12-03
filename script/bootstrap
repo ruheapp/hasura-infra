@@ -7,13 +7,15 @@ ROOT="$DIR/.."
 
 pushd $ROOT
 npm i
-pipenv install
+#pipenv install
 popd
 
 . $ROOT/script/lib/parse-opts.sh
 
 $ROOT/$HASURA_SCRIPT_PREFIX/bootstrap
 
+sleep 5
 eval `$ROOT/script/env.sh`
 
-## TODO: Hasura Migration
+sleep 5
+$ROOT/script/hasura migrate apply
