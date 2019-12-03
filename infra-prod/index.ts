@@ -88,32 +88,6 @@ export const appService = new azure.appservice.AppService("hasura", {
   location: rg.location
 });
 
-/*
-export const helloWorld = new azure.appservice.HttpFunction("helloWorld", {
-  route: "test",
-  methods: ["GET"],
-  callback: async (_context, req) => {
-    return {
-      status: 200,
-      headers: { "content/type": "text/plain" },
-      body: { message: `Hasura is foo and the request body is\n${req.body}` },
-    };
-  },
-});
-
-export const helloWorld2 = new azure.appservice.HttpFunction("whyTho", {
-  route: "/bar",
-  methods: ["GET"],
-  callback: async (_context, req) => {
-    return {
-      status: 200,
-      headers: { "content/type": "text/plain" },
-      body: { message: `Hasura is bar and the request body is\n${req.body}` },
-    };
-  },
-});
-*/
-
 const vnet = new azure.network.VirtualNetwork("vnet", {
   resourceGroupName: rg.name,
   addressSpaces: ["10.0.0.0/16"],
@@ -172,37 +146,4 @@ export const jumpbox = new azure.compute.VirtualMachine("jumpbox", {
     sku: "18.04-LTS",
     version: "latest"
   }
-});
-
-
-export const testrg = new azure.core.ResourceGroup("whytho", {
-  location: location,
-  name: "rg-whytho"
-});
-
-const get = new azure.appservice.HttpFunction("Read", {
-  route: "items",
-  methods: ["GET"],
-  callback: async (context, request) => {
-    return { status: 200, body: { message: "wat" } };
-  },
-});
-
-const post = new azure.appservice.HttpFunction("Add", {
-  route: "items",
-  methods: ["POST"],
-  callback: async (context, request) => {
-    return { status: 201, body: { message: "watttt" } };
-  },
-});
-
-export const app = new azure.appservice.MultiCallbackFunctionApp("multi-app", {
-  resourceGroupName: testrg.name,
-  functions: [get, post],
-});
-
-export const helloWorldApp = new azure.appservice.MultiCallbackFunctionApp("helloWorldApp", {
-  resourceGroupName: rg.name,
-  plan: appPlan,
-  functions: [get, post],
 });
