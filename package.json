@@ -1,15 +1,14 @@
 {
     "name": "hasura-infra",
     "devDependencies": {
-        "@types/node": "latest"
-    },
-    "dependencies": {
-        "pg": "^7.12.1",
+        "@types/node": "latest",
+        "pg": "^7.14.0",
         "sequelize": "^5.21.2",
         "sequelize-cli": "^5.5.1",
-        "@pulumi/azure": "^1.3.1",
+        "@pulumi/azure": "^1.6.0",
         "@pulumi/docker": "^0.17.4",
-        "@pulumi/postgresql": "^1.0.0",
-        "@pulumi/pulumi": "^1.4.1"
-    }
+        "@pulumi/postgresql": "^1.1.0",
+        "@pulumi/pulumi": "^1.6.1"
+    },
+    "dependencies": {}
 }

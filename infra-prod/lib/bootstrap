@@ -5,7 +5,7 @@ set -euo pipefail
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 ROOT="$DIR/../.."
 
-export HASURA_STACK_NAME=`pulumi stack | head -n 1 | sed -e 's/.*is //' -e 's/.$//g'`
+export HASURA_STACK_NAME=`pulumi stack 2>/dev/null | head -n 1 | sed -e 's/.*is //' -e 's/.$//g'`
 
 mkdir -p "$ROOT/config/keys"
 KEYPATH="$ROOT/config/keys/$HASURA_STACK_NAME"

@@ -33,8 +33,8 @@ export const dbServer = new azure.postgresql.Server("pg", {
 export const db = new azure.postgresql.Database("pg-db", {
   resourceGroupName: rg.name,
   serverName: dbServer.name,
-  charset: "utf8",
-  collation: "en_US",
+  charset: "UTF8",
+  collation: "en-US",
   name: cfg.get("dbname") || "ruhe"
 });
 
@@ -82,7 +82,7 @@ export const appService = new azure.appservice.AppService("hasura", {
   },
   siteConfig: {
     alwaysOn: true,
-    linuxFxVersion: "DOCKER|hasura/graphql-engine:1.0.0-beta.9"
+    linuxFxVersion: "DOCKER|hasura/graphql-engine:latest"
   },
   resourceGroupName: rg.name,
   location: rg.location

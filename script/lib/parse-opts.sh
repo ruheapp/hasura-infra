@@ -33,5 +33,7 @@ while (( "$#" )); do
   esac
 done
 
+eval $($ROOT/script/env.sh)
+
 # set positional arguments in their proper place
 eval set -- "$PARAMS"
