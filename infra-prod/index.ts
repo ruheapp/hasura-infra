@@ -76,7 +76,7 @@ export const appService = new azure.appservice.AppService("hasura", {
     HASURA_GRAPHQL_DATABASE_URL: databaseUrl,
     HASURA_GRAPHQL_JWT_SECRET: `{"type":"RS512", "jwk_url": "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com"}`,
     HASURA_GRAPHQL_ADMIN_SECRET: cfg.requireSecret("pgpass"),
-    HASURA_GRAPHQL_ENABLE_CONSOLE: `true`,
+    HASURA_GRAPHQL_ENABLE_CONSOLE: `false`,
     HASURA_GRAPHQL_UNAUTHORIZED_ROLE: `anonymous`,
     WEBSITES_PORT: "8080"
   },
