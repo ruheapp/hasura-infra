@@ -7,21 +7,19 @@ ROOT="$DIR/.."
 
 pushd $ROOT
 npm i
-pipenv install
+
+## NB: pipenv is fucked on WSL2
+if [ ! -f /etc/wsl.conf ]; then
+  pipenv install
+fi
 popd
 
 . $ROOT/script/lib/parse-opts.sh
 
 $ROOT/$HASURA_SCRIPT_PREFIX/bootstrap
 
+sleep 5
 eval `$ROOT/script/env.sh`
 
-$ROOT/script/lib/start-db-tunnel
 sleep 5
-
-$ROOT/script/update-config
-npx sequelize db:migrate
-
-$ROOT/script/import-metadata
-
-$ROOT/script/lib/stop-db-tunnel
+$ROOT/script/hasura migrate apply

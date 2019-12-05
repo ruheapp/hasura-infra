@@ -119,14 +119,12 @@
                 "widechars"
             ],
             "hashes": [
-                "sha256:08dee228013dcb2a39718f225e8dbdcc2d0c2b984fe6edcdfb054e5d53a25d92",
                 "sha256:5470cc6687a091c7042cee89b2946d9235fe9f6d49c193a4ae2ac7bf386737c8"
             ],
             "version": "==0.8.6"
         },
         "terminaltables": {
             "hashes": [
-                "sha256:d65da49234ebdb3640918309fce62006823689038388dbfe28c8ba0bc6803ba0",
                 "sha256:f3eb0eb92e3833972ac36796293ca0906e998dc3be91fbe1f8615b331b853b81"
             ],
             "version": "==3.1.0"

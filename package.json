@@ -2,9 +2,6 @@
     "name": "hasura-infra",
     "devDependencies": {
         "@types/node": "latest",
-        "pg": "^7.14.0",
-        "sequelize": "^5.21.2",
-        "sequelize-cli": "^5.5.1",
         "@pulumi/azure": "^1.6.0",
         "@pulumi/docker": "^0.17.4",
         "@pulumi/postgresql": "^1.1.0",

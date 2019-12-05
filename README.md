@@ -17,7 +17,18 @@ script/bootstrap
 
 ### Using Hasura
 
-Check out the console first at http://localhost:8081. Try making queries at http://localhost:8081/console/api-explorer
+hasura-infra is set up to use Hasura's built-in migrations framework for PostgreSQL - this is super great, because it means that as you create tables and relations using the UI, instead of modifying your production database, it will *write out the migrations* for you to the `db` directory. To get started, run:
+
+```sh
+script/hasura console
+```
+
+When you're ready to apply these migrations to another environment (say production, or staging), run:
+
+```sh
+pulumi stack select my-prod-stack
+script/bootstrap
+```
 
 ### What Else Can I Do
 
@@ -49,18 +60,6 @@ ana@localhost:ruhe-f8ebb58> SELECT * FROM "Users";
 | id   | name   | email   | createdAt   | updatedAt   |
 |------+--------+---------+-------------+-------------|
 +------+--------+---------+-------------+-------------+
-```
-
-Next, we can use Sequelize to connect to our database:
-
-```sh
-. script/env.sh
-node
-```
-
-```js
-db = require('./models')
-db.User.create({name: "Sally", email: "sally@iscool.com"})
 ```
 
 ## Production Mode

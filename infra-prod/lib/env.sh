@@ -11,7 +11,7 @@ echo export PGSQL_PASS=`pulumi config get pgpass 2>/dev/null`;
 echo export PGSQL_HOST=`echo $STACK | jq -r .dbServer.fqdn`;
 
 SITE=`echo $STACK | jq -r .appService.defaultSiteHostname`
-echo export HASURA_URL="http://$SITE";
+echo export HASURA_URL="https://$SITE";
 
 echo export HASURA_JUMPBOX_HOSTNAME=`echo $STACK | jq -r '.jumpboxIp.fqdn'`;
 
