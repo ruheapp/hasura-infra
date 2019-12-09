@@ -71,7 +71,6 @@ pulumi stack init  ## Create a non-dev stack
 
 pulumi config set hasura-infra:pguser MyCoolUserName
 pulumi config set --secret hasura-infra:pgpass OmgASekritPassword!
-pulumi config set hasura-infra:pgpass OmgASekritPassword!
 
 script/bootstrap --prod
 ```
