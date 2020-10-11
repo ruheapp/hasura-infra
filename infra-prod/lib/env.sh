@@ -1,5 +1,6 @@
 #!/bin/bash
 
+export PULUMI_SKIP_UPDATE_CHECK=1
 STACK=`pulumi stack output -j 2>/dev/null`
 
 echo export PGSQL_DATABASE=`echo $STACK | jq -r '.db.name'`;
