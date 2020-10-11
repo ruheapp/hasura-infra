@@ -1,11 +1,11 @@
 {
     "name": "hasura-infra",
     "devDependencies": {
-        "@types/node": "latest",
-        "@pulumi/azure": "^1.6.0",
-        "@pulumi/docker": "^0.17.4",
-        "@pulumi/postgresql": "^1.1.0",
-        "@pulumi/pulumi": "^1.6.1"
+        "@pulumi/azure": "^3.24.1",
+        "@pulumi/docker": "^2.3.1",
+        "@pulumi/postgresql": "^2.4.0",
+        "@pulumi/pulumi": "^2.11.2",
+        "@types/node": "latest"
     },
     "dependencies": {}
 }

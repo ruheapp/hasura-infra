@@ -6,18 +6,13 @@ const location = cfg.get("location") || "West US 2";
 
 export const rg = new azure.core.ResourceGroup("ruhe-db", {
   location: location,
-  name: cfg.require("resourceGroup")
+  name: cfg.require("resourceGroup"),
 });
 
 export const dbServer = new azure.postgresql.Server("pg", {
   location: rg.location,
   resourceGroupName: rg.name,
-  sku: {
-    family: "Gen5",
-    name: "B_Gen5_1",
-    tier: "Basic",
-    capacity: 1
-  },
+  skuName: "B_Gen5_1",
   sslEnforcement: "Disabled",
   administratorLogin: cfg.require("pguser"),
   administratorLoginPassword: cfg.requireSecret("pgpass"),
@@ -25,9 +20,9 @@ export const dbServer = new azure.postgresql.Server("pg", {
     autoGrow: "Disabled",
     backupRetentionDays: 7,
     geoRedundantBackup: "Disabled",
-    storageMb: 5120
+    storageMb: 5120,
   },
-  version: "11"
+  version: "11",
 });
 
 export const db = new azure.postgresql.Database("pg-db", {
@@ -35,7 +30,7 @@ export const db = new azure.postgresql.Database("pg-db", {
   serverName: dbServer.name,
   charset: "UTF8",
   collation: "en-US",
-  name: cfg.get("dbname") || "ruhe"
+  name: cfg.get("dbname") || "ruhe",
 });
 
 const fw = new azure.postgresql.FirewallRule("pg-fw", {
@@ -43,7 +38,7 @@ const fw = new azure.postgresql.FirewallRule("pg-fw", {
   name: "allow-azure-internal",
   startIpAddress: "0.0.0.0",
   endIpAddress: "0.0.0.0",
-  resourceGroupName: rg.name
+  resourceGroupName: rg.name,
 });
 
 const appPlan = new azure.appservice.Plan("hasura", {
@@ -54,8 +49,8 @@ const appPlan = new azure.appservice.Plan("hasura", {
   sku: {
     size: "B1",
     tier: "Basic",
-    capacity: 1
-  }
+    capacity: 1,
+  },
 });
 
 const databaseUrl = pulumi
@@ -64,7 +59,7 @@ const databaseUrl = pulumi
     cfg.requireSecret("pgpass"),
     dbServer.name,
     dbServer.fqdn,
-    db.name
+    db.name,
   ])
   .apply(
     ([u, p, dbn, hn, n]) => `postgres://${u}%40${dbn}:${p}@${hn}:5432/${n}`
@@ -78,25 +73,25 @@ export const appService = new azure.appservice.AppService("hasura", {
     HASURA_GRAPHQL_ADMIN_SECRET: cfg.requireSecret("pgpass"),
     HASURA_GRAPHQL_ENABLE_CONSOLE: `false`,
     HASURA_GRAPHQL_UNAUTHORIZED_ROLE: `anonymous`,
-    WEBSITES_PORT: "8080"
+    WEBSITES_PORT: "8080",
   },
   siteConfig: {
     alwaysOn: true,
-    linuxFxVersion: "DOCKER|hasura/graphql-engine:latest"
+    linuxFxVersion: "DOCKER|hasura/graphql-engine:latest",
   },
   resourceGroupName: rg.name,
-  location: rg.location
+  location: rg.location,
 });
 
 const vnet = new azure.network.VirtualNetwork("vnet", {
   resourceGroupName: rg.name,
   addressSpaces: ["10.0.0.0/16"],
-  subnets: [{ name: "default", addressPrefix: "10.0.1.0/24" }]
+  subnets: [{ name: "default", addressPrefix: "10.0.1.0/24" }],
 });
 
 export const jumpboxIp = new azure.network.PublicIp("jumpbox-ip", {
   resourceGroupName: rg.name,
-  domainNameLabel: appService.name.apply(n => `jump-${n}`),
+  domainNameLabel: appService.name.apply((n) => `jump-${n}`),
   allocationMethod: "Dynamic",
 });
 
@@ -107,12 +102,12 @@ const jumpboxNic = new azure.network.NetworkInterface("jumpboxNic", {
       name: "jumpbox-ipcfg",
       subnetId: vnet.subnets[0].id,
       privateIpAddressAllocation: "Dynamic",
-      publicIpAddressId: jumpboxIp.id
-    }
-  ]
+      publicIpAddressId: jumpboxIp.id,
+    },
+  ],
 });
 
-const sshKey = process.env['HASURA_JUMPBOX_SSH_KEY'] || '';
+const sshKey = process.env["HASURA_JUMPBOX_SSH_KEY"] || "";
 if (sshKey.length < 2) {
   throw new Error("Jumpbox SSH key not set!");
 }
@@ -130,22 +125,22 @@ export const jumpbox = new azure.compute.VirtualMachine("jumpbox", {
     sshKeys: [
       {
         keyData: sshKey,
-        path: `/home/${cfg.require('pguser')}/.ssh/authorized_keys`,
-      }
-    ]
+        path: `/home/${cfg.require("pguser")}/.ssh/authorized_keys`,
+      },
+    ],
   },
   storageOsDisk: {
     createOption: "FromImage",
     managedDiskType: "Standard_LRS",
     name: "myosdisk1",
-    diskSizeGb: 30
+    diskSizeGb: 30,
   },
   storageImageReference: {
     publisher: "canonical",
     offer: "UbuntuServer",
     sku: "18.04-LTS",
-    version: "latest"
-  }
+    version: "latest",
+  },
 });
 
 /*

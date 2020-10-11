@@ -17,7 +17,7 @@ script/bootstrap
 
 ### Using Hasura
 
-hasura-infra is set up to use Hasura's built-in migrations framework for PostgreSQL - this is super great, because it means that as you create tables and relations using the UI, instead of modifying your production database, it will *write out the migrations* for you to the `db` directory. To get started, run:
+hasura-infra is set up to use Hasura's built-in migrations framework for PostgreSQL - this is super great, because it means that as you create tables and relations using the UI, instead of modifying your production database, it will _write out the migrations_ for you to the `db` directory. To get started, run:
 
 ```sh
 script/hasura console
@@ -37,7 +37,7 @@ Now, we can do a few things - first, run an instance of `pgcli`
 ```
 ./script/pgcli
 
-ana@localhost:ana> \l                                                                                                      
+ana@localhost:ana> \l
 +--------------+---------+------------+------------+------------+---------------------+
 | Name         | Owner   | Encoding   | Collate    | Ctype      | Access privileges   |
 |--------------+---------+------------+------------+------------+---------------------|
@@ -52,10 +52,10 @@ ana@localhost:ana> \l
 
 \c ruhe-f8ebb58
 
-ana@localhost:ana> \c ruhe-f8ebb58                                                                                         
+ana@localhost:ana> \c ruhe-f8ebb58
 You are now connected to database "ruhe-f8ebb58" as user "ana"
 
-ana@localhost:ruhe-f8ebb58> SELECT * FROM "Users";                                                                         
+ana@localhost:ruhe-f8ebb58> SELECT * FROM "Users";
 +------+--------+---------+-------------+-------------+
 | id   | name   | email   | createdAt   | updatedAt   |
 |------+--------+---------+-------------+-------------|
@@ -80,3 +80,4 @@ To find where your Hasura server ended up, run:
 ```sh
 eval `script/env.sh`
 echo "Your Hasura installation is at $HASURA_URL"
+```
